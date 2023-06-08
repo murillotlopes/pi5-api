@@ -1,5 +1,6 @@
 import express from "express";
-import registroRotas from "./project/rotasApi";
+import registroRotas from "./project/rotaApi";
+
 
 const app = express()
 
