@@ -1,7 +1,6 @@
-import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data-source';
 import { Usuario } from '../../entities/Usuario';
-import { Repositorio } from '../../class/repositorio';
 
 export class UsuarioRepositorio {
   private rep: Repository<Usuario>
