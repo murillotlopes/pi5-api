@@ -11,14 +11,14 @@ export class Operacao {
     @Column()
     tipo_operacao: string
 
-    @Column()
+    @Column({ nullable: true })
     mercado: string
 
-    @Column()
+    @Column({ nullable: true })
     trade: string
 
     @Column()
-    data_operacao: Date
+    data_operacao: string
 
     @Column()
     quantidade: number
@@ -26,22 +26,22 @@ export class Operacao {
     @Column()
     valor: number
 
-    @Column()
+    @Column({ nullable: true })
     corretagem: number
 
-    @Column()
+    @Column({ nullable: true })
     taxa_liquidacao: number
 
-    @Column()
+    @Column({ nullable: true })
     emolumentos: number
 
-    @Column()
+    @Column({ nullable: true })
     ir_retido: number
 
-    @Column()
+    @Column({ nullable: true })
     nota_corretagem: number
 
-    @Column()
+    @Column({ nullable: true })
     lucro_prejuizo: number
 
     @ManyToOne(type => Operacao)

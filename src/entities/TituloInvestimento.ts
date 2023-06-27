@@ -14,19 +14,19 @@ export class TituloInvestimento {
     @Column()
     nome_empresa: string
 
-    @Column()
+    @Column({ nullable: true })
     cnpj: string
 
-    @Column()
+    @Column({ nullable: true })
     tipo: string
 
-    @Column()
+    @Column({ nullable: true })
     segmento: string
 
-    @Column()
+    @Column({ nullable: true })
     divident_yield: string
 
-    @Column()
+    @Column({ nullable: true })
     cota_rendimento: number
 
     @OneToMany(type => Operacao, (operacao) => operacao.investimento)
