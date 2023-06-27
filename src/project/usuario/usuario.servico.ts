@@ -47,6 +47,7 @@ export class UsuarioServico {
         const token = sign(usuario, env.SECRET_KEY, {
           expiresIn: env.EXPIRES_IN,
         })
+
         return token
       } else {
         throw new Error('E-mail ou senha incorretos!')

@@ -8,7 +8,10 @@ class UsuarioControler {
       const novo = await usuarioServico.criar(req.body)
       return res.status(201).json(novo)
     } catch (error) {
-      return res.status(400).json({ msg: 'Ocorreu um erro' })
+      return res.status(400).json({
+        msg: error.message,
+        detalhe: error.detail,
+      })
     }
   }
 
@@ -19,7 +22,10 @@ class UsuarioControler {
       return res.json(user)
 
     } catch (error) {
-      return res.status(400).json({ msg: 'Ocorreu um erro' })
+      return res.status(400).json({
+        msg: error.message,
+        detalhe: error.detail,
+      })
     }
   }
 
@@ -32,7 +38,10 @@ class UsuarioControler {
 
       return res.json({ msg: `id ${entidade_id} atualizado` })
     } catch (error) {
-      return res.status(400).json({ msg: 'Ocorreu um erro' })
+      return res.status(400).json({
+        msg: error.message,
+        detalhe: error.detail,
+      })
     }
   }
 
@@ -43,7 +52,10 @@ class UsuarioControler {
       return res.json({ msg: `id ${entidade_id} apagado` })
 
     } catch (error) {
-      return res.status(400).json({ msg: 'Ocorreu um erro' })
+      return res.status(400).json({
+        msg: error.message,
+        detalhe: error.detail,
+      })
     }
   }
 
@@ -55,7 +67,10 @@ class UsuarioControler {
       const token = await usuarioServico.login(email, hashSenha)
       return res.json({ token: token })
     } catch (error) {
-      return res.json({ msg: error.message })
+      return res.json({
+        msg: error.message,
+        detalhe: error.detail,
+      })
     }
   }
 }
