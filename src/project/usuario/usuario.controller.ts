@@ -64,10 +64,10 @@ class UsuarioControler {
       const email = req.body.email
       const hashSenha = req.body.senha
 
-      const token = await usuarioServico.login(email, hashSenha)
-      return res.json({ token: token })
+      const tokenUsuario = await usuarioServico.login(email, hashSenha)
+      return res.json(tokenUsuario)
     } catch (error) {
-      return res.json({
+      return res.status(400).json({
         msg: error.message,
         detalhe: error.detail,
       })

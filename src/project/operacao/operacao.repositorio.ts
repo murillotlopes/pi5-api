@@ -17,7 +17,7 @@ export class OperacaoRepositorio {
         })
     }
 
-    public async salvar(entidade) {
+    public async salvar(entidade: Operacao) {
         return await this.rep.save(entidade)
     }
 

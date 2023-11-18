@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data-source';
 import { Usuario } from '../../entities/Usuario';
+import { removerSenhaUsuario } from '../../util/util';
 
 export class UsuarioRepositorio {
   private rep: Repository<Usuario>
@@ -27,7 +28,13 @@ export class UsuarioRepositorio {
   }
 
   public async usuario(emailUsuario: string) {
-    return await this.rep.find({ where: { email: emailUsuario } })
+    return await this.rep.findOne({ where: { email: emailUsuario } })
+  }
+
+  public async usuarioId(usuarioId: number) {
+    const usuario = await this.rep.findOne({ where: { id: usuarioId } })
+
+    return removerSenhaUsuario(usuario)
   }
 }
 

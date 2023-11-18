@@ -8,8 +8,9 @@ export class OperacaoServico {
         return operacoes
     }
 
-    public async salvar(entidade) {
+    public async salvar(entidade: Operacao) {
         const operacaoSalvo = await operacaoRepositorio.salvar(entidade)
+        return operacaoSalvo
     }
 }
 

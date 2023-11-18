@@ -1,5 +1,7 @@
 import { TituloInvestimento } from "../../entities/TituloInvestimento"
+import { Usuario } from "../../entities/Usuario"
 import apiBrapi from "../../providers/apiBrapi"
+import apiKnn from "../../providers/apiKnn"
 import tituloRepositorio from "./titulo.repositorio"
 
 class TituloService {
@@ -7,7 +9,7 @@ class TituloService {
   public async buscar(ticket: string) {
     const ticketDB = await tituloRepositorio.buscar(ticket)
 
-    if (ticketDB.length === 0) {
+    if (!ticketDB) {
       const novoTitulo = new TituloInvestimento()
       const consulta = await apiBrapi.buscarTicket(ticket)
       const consulta2 = await apiBrapi.listarTicket(ticket)
@@ -22,6 +24,22 @@ class TituloService {
       }
     }
     return ticketDB
+  }
+
+  public async meusTitulos(usuario: Usuario) {
+
+    const titulos = await tituloRepositorio.meusTitulos(usuario)
+
+    for (const titulo of titulos) {
+      try {
+        const analise = (await apiKnn.analise({ ticker: titulo.ticket })).data
+        titulo.recomendacao = analise.recomendacao
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    return titulos
   }
 }
 

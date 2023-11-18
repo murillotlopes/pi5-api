@@ -3,6 +3,7 @@ import { Usuario } from '../../entities/Usuario';
 import { compare, hash } from 'bcryptjs';
 import { sign } from "jsonwebtoken";
 import { env } from "process";
+import { removerSenhaUsuario } from "../../util/util";
 
 export class UsuarioServico {
 
@@ -10,18 +11,14 @@ export class UsuarioServico {
     entidade.senha = await hash(entidade.senha, 12)
     const novoUsuario = await usuarioRepositorio.criar({ ...entidade })
 
-    const { senha, ...usuarioSemSenha } = novoUsuario
-    return usuarioSemSenha
-
-
+    return removerSenhaUsuario(novoUsuario)
   }
 
   public async listar() {
     const usuarios: Usuario[] = await usuarioRepositorio.listar()
     const usuariosSemSenha = []
     for (const us of usuarios) {
-      const { senha, ...usss } = us
-      usuariosSemSenha.push(usss)
+      usuariosSemSenha.push(removerSenhaUsuario(us))
     }
 
     return usuariosSemSenha
@@ -37,18 +34,18 @@ export class UsuarioServico {
   }
 
   public async login(email: string, hashSenha: string) {
-    const emailUsuario: Usuario[] = await usuarioRepositorio.usuario(email)
+    const emailUsuario: Usuario = await usuarioRepositorio.usuario(email)
 
-    if (emailUsuario.length === 0) {
+    if (!emailUsuario) {
       throw new Error('E-mail ou senha incorretos!')
     } else {
-      if (compare(hashSenha, emailUsuario[0].senha)) {
-        const { senha, ...usuario } = emailUsuario[0]
+      if (await compare(hashSenha, emailUsuario.senha)) {
+        const { senha, ...usuario } = emailUsuario
         const token = sign(usuario, env.SECRET_KEY, {
           expiresIn: env.EXPIRES_IN,
         })
 
-        return token
+        return { token: token, usuario: usuario }
       } else {
         throw new Error('E-mail ou senha incorretos!')
       }
