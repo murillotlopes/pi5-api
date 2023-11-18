@@ -23,7 +23,7 @@ export class Operacao {
     @Column()
     quantidade: number
 
-    @Column()
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     valor: number
 
     @Column({ nullable: true })
@@ -44,11 +44,11 @@ export class Operacao {
     @Column({ nullable: true })
     lucro_prejuizo: number
 
-    @ManyToOne(type => Operacao)
+    @ManyToOne(type => Usuario, { cascade: ['insert', 'update'] })
     @JoinColumn({ name: 'usuario_id' })
     usuario: Usuario
 
-    @ManyToOne(type => TituloInvestimento)
+    @ManyToOne(type => TituloInvestimento, { cascade: ['insert', 'update'] })
     @JoinColumn({ name: 'titulo_investimento_id' })
     investimento: TituloInvestimento
 }
