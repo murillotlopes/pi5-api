@@ -8,19 +8,27 @@ import axios, { AxiosInstance } from "axios";
 
 class ApiBrapi {
   private api: AxiosInstance
+  private token: { token: string }
 
   constructor() {
+    this.token = { token: process.env.TOKEN_BRAPI }
     this.api = axios.create({
       baseURL: 'https://brapi.dev/api'
     })
   }
 
   public async buscarTicket(ticket: string) {
-    return (await this.api.get(`/quote/${ticket}`)).data.results[0]
+    return (await this.api.get(`/quote/${ticket}`, { params: { ...this.token } })).data.results[0]
   }
 
   public async listarTicket(ticket?: string) {
-    return (await this.api.get(`/quote/list${ticket ? `?search=${ticket}` : ''}`)).data.stocks[0]
+    return (await this.api.get(`/quote/list`, {
+      params: {
+        ...this.token,
+        search: ticket
+        // ${ticket ? `?search=${ticket}` : ''}
+      }
+    })).data.stocks[0]
   }
 }
 

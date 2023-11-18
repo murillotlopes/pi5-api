@@ -5,7 +5,7 @@ class ApiKnn {
 
   constructor() {
     this.api = axios.create({
-      baseURL: '127.0.0.1:5000/api/knn'
+      baseURL: 'http://127.0.0.1:5000/api/knn'
     })
   }
 
