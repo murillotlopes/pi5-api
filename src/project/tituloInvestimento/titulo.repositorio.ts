@@ -8,10 +8,12 @@ export interface MeusInvestimentosType {
   id: number,
   ticket: string,
   nome_empresa: string,
-  valor: number,
+  total: number,
   quantidade: number,
   custo_medio: number,
-  recomendacao: string
+  recomendacao: string,
+  lucro: number,
+  tipo: string
 }
 
 class TituloRepositorio {
@@ -52,15 +54,19 @@ class TituloRepositorio {
       .select('ti.ticket', 'ticket')
       .addSelect('ti.nome_empresa', 'nome_empresa')
       .addSelect('ti.id', 'id')
+      .addSelect('ti.tipo', 'tipo')
       .addSelect(subQuery => {
         return subQuery.select(`coalesce (sum(case when o2.tipo_operacao = 'C' then o2.quantidade * o2.valor else (o2.quantidade * o2.valor) * -1 end ), 0)`).from(Operacao, 'o2').where('o2.titulo_investimento_id = ti.id')
-      }, 'valor')
+      }, 'total')
       .addSelect(subQuery => {
         return subQuery.select(`coalesce (sum(case when o2.tipo_operacao = 'C' then o2.quantidade else o2.quantidade * -1 end ), 0) `).from(Operacao, 'o2').where('o2.titulo_investimento_id = ti.id')
       }, 'quantidade')
       .addSelect(subQuery => {
-        return subQuery.select(`coalesce (avg(case when o2.tipo_operacao = 'C' then o2.valor else o2.valor * -1 end ), 0)`).from(Operacao, 'o2').where('o2.titulo_investimento_id = ti.id')
+        return subQuery.select(`coalesce (avg(o2.valor), 0)`).from(Operacao, 'o2').where('o2.titulo_investimento_id = ti.id').andWhere(`o2.tipo_operacao = 'C'`)
       }, 'custo_medio')
+      .addSelect(subQuery => {
+        return subQuery.select(`coalesce (sum(o2.valor * o2.quantidade), 0)`).from(Operacao, 'o2').where('o2.titulo_investimento_id = ti.id').andWhere(`o2.tipo_operacao = 'V'`)
+      }, 'lucro')
       .innerJoin('ti.operacoes', 'o')
       .leftJoin('ti.rendimentos', 'r')
       .where('o.usuario_id = :usuarioId', { usuarioId: usuario.id })
@@ -68,6 +74,10 @@ class TituloRepositorio {
       .getRawMany()
 
     return titulos as Array<MeusInvestimentosType>
+  }
+
+  public async operacaoPorTitulo(tituloId: number, usuario: Usuario) {
+    return await this.rep.findOne({ relations: { operacoes: true }, where: { operacoes: { usuario: usuario }, id: tituloId } })
   }
 
 }

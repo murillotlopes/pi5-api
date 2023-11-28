@@ -32,9 +32,7 @@ export class UsuarioRepositorio {
   }
 
   public async usuarioId(usuarioId: number) {
-    const usuario = await this.rep.findOne({ where: { id: usuarioId } })
-
-    return removerSenhaUsuario(usuario)
+    return await this.rep.findOne({ where: { id: usuarioId } })
   }
 }
 
