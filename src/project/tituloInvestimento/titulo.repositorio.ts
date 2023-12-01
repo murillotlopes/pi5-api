@@ -70,6 +70,8 @@ class TituloRepositorio {
       .innerJoin('ti.operacoes', 'o')
       .leftJoin('ti.rendimentos', 'r')
       .where('o.usuario_id = :usuarioId', { usuarioId: usuario.id })
+      .orderBy('ti.ticket')
+      .addOrderBy('ti.nome_empresa')
       .groupBy('ti.id')
       .getRawMany()
 
